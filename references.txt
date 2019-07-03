@@ -1,0 +1,12 @@
+references
+
+- dlib-based alignment(using model dlib.face.landmarks.dat)
+
+- code taken from https://github.com/TessFerrandez/research-papers/tree/master/facenet(more infor here https://www.youtube.com/watch?v=w--c0qG9MCc)
+
+- Code taken from https://github.com/iwantooxxoox/Keras-OpenFace (with minor modifications)
+
+- Implementation of FaceNet trained on the public datasets FaceScrub and CASIA-WebFace
+
+- probem with serving model in flask (https://towardsdatascience.com/deploying-keras-deep-learning-models-with-flask-5da4181436a2)
+[It’s also necessary to set up a reference to the tensorflow graph using tf.get_default_graph(). If this step is omitted, an exception may occur during the predict step. The condition with graph.as_default() is used to grab a threadsafe reference to the graph when making predictions. In the predict function, the request arguments are converted to a data frame and then passed to the Keras model to make a prediction. Additional details on using the passed in arguments are covered in my models as a service post.]
