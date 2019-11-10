@@ -3,8 +3,8 @@ import numpy as np
 import os.path
 import cv2
 
-from align import AlignDlib
 from itertools import permutations
+from functions import load_image
 
 class IdentityMetadata():
     def __init__(self, base, name, file):
@@ -49,18 +49,7 @@ def load_metadata(path):
 
     return np.array(metadata), reference
 
-# OpenCV loads images with color channels
-# in BGR order. So we need to reverse them
-def load_image(path):
-    img = cv2.imread(path, 1)
-    return align_image(img[...,::-1])
 
-# Initialize the OpenFace face alignment utility
-alignment = AlignDlib('models/dlib.face.landmarks.dat')
-
-def align_image(img):
-    return alignment.align(96, img, alignment.getLargestFaceBoundingBox(img), landmarkIndices=AlignDlib.OUTER_EYES_AND_NOSE)
-    
 def get_randint(max_value, not_value=-1):
     while True:
         value = np.random.randint(max_value)+1
