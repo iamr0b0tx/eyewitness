@@ -1,30 +1,9 @@
 # from standard library
-import os, json, random, glob, subprocess
+import os, json, subprocess
 
 # from third party lib
-import keras
 
 from flask import Flask, render_template, request
-from keras.models import load_model
-import tensorflow as tf
-
-# from lib code
-from model import create_model
-
-"""# Using a pre-trained OpenFace model on a custom dataset
-
-Implementation of FaceNet trained on the public datasets FaceScrub and CASIA-WebFace
-
-## Load the pre-trained model
-"""
-
-# initialize the model that predicts
-global graph
-graph = tf.get_default_graph()
-# model = load_model('weights/weights.h5')
-
-model = create_model()
-model.load_weights('weights/weights.h5')
 
 # initialize the server
 app = Flask(__name__, static_url_path='/static', static_folder='static', template_folder='templates')
@@ -36,24 +15,50 @@ SESSION = False
 def index():
 	global SESSION;
 	if SESSION == False:
-		return render_template('index.html')
+		return render_template('login.html')
 	
 	else:
-		return render_template('site.html')
+		return render_template('index.html')
 
-@app.route('/predict')
-def predict():
+@app.route('/registeration')
+def registeration():
+	return render_template('register.html')
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+	status, text = True, 0
+	# try:
+	username = request.form['username']
+
 	global SESSION;
 	status, text = True, 0
-	try:
-		test = subprocess.Popen(["python", "test.py"], stdout=subprocess.PIPE)
-		text = int(test.communicate()[0].decode())
+	# try:
+	test = subprocess.Popen(["python", "compare_face.py"], stdout=subprocess.PIPE)
+	text = eval(test.communicate()[0].decode().replace('\r', '').replace('\n', ''))
+	print(text)
+	text = int(text)
 
-	except Exception as e:
-		status, text = False, 0
+	# except Exception as e:
+	# 	status, text = False, 0
 
 	print(text)
 	SESSION = bool(text)
+
+	return json.dumps({'status':status, 'data':text})
+	# return json.dumps({'status':status, 'data':text})
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+	status, text = True, 0
+	try:
+		data = request.data
+		encoded_data = data.split(',')[1]
+		nparr = np.fromstring(encoded_data.decode('base64'), np.uint8)
+		img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+	except Exception as ae:
+		status, text = False, 0
 
 	return json.dumps({'status':status, 'data':text})
 
