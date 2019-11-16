@@ -30,15 +30,36 @@ video.onclick = function() {
 	// notify login process
 	h1.innerHTML = "Logining in...";
 
-	// the access api url
-	target_url = location.href + '/validate'
-
 	//Usage example:
 	urltoFile(dataURL, 'sample_shot.png', 'image/png')
 		.then(function (file) {
 			//upload image
-			upload(file, target_url);
+			upload(file);
+
+			// send the request
+			// sendReq(function () { }, form_data, 'http://127.0.0.1:3000/1000/76')
 		}
 	);
-		
+	
+	var proxyUrl = 'https://cors-anywhere.herokuapp.com/',
+		targetUrl = 'http://127.0.0.1:3000/1000/76'
+
+	// This will upload the file after having read it
+	const upload = (file) => {
+		fetch(targetUrl, { // Your POST endpoint
+			method: 'POST',
+			headers: {
+				// Content-Type may need to be completely **omitted**
+				// or you may need something
+				// "Content-Type": "image/png"
+			},
+			body: file // This is your file object
+		}).then(
+			response => response.json() // if the response is a JSON object
+		).then(
+			success => console.log(success) // Handle the success response object
+		).catch(
+			error => console.log(error) // Handle the error response object
+		);
+	};	
 };

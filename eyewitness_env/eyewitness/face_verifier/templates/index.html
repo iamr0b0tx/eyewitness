@@ -1,13 +1,18 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
 	<title></title>
-	<link rel="stylesheet" type="text/css" href="static/css/index.css">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
 </head>
 <body>
 	<div class='container'>
 		<div id="screenshot">
-			<video autoplay></video>
+			<form action="">
+				{% csrf_token %}
+				<video autoplay></video>
+			</form>
 
 			<img src="">
 			<canvas style="display:none;"></canvas>
@@ -17,14 +22,8 @@
 		</div>
 	</div>
 
-	<form id="formElem">
-		<input type="text" name="firstName" value="John">
-		Picture: <input type="file" name="picture" accept="image/*">
-		<input type="submit">
-	</form>
-
-	<script type="text/javascript" src="static/js/functions.js"></script>
-	<script type="text/javascript" src="static/js/index.js"></script>
+	<script type="text/javascript" src="{% static 'js/functions.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 
 </body>
 </html>

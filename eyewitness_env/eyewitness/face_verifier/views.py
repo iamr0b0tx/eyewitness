@@ -1,38 +1,54 @@
+import sys
+sys.path.insert(0, "face_verifier/")
+sys.path.insert(0, "face_verifier/lib")
+
 # from standard library
 import os
 import json
-import base64
 
 # from third party lib
 import cv2
 import numpy as np
-from PIL import Image
-from flask import Flask, render_template, request
 
 # from django framework
 from django.shortcuts import render
+from django.http import JsonResponse
 
-# Create your views here.
-def index(request):
-	return render(request, 'index.html')
+# form codebase library
+from compare_face import compare
 
-def authenticate(request, api_token, refid):
-	print(len(request.data))
+# the landing page
+def index(request, user_id, api_token, refid):
+	if api_token == 1000 and refid == 101:
+		return render(request, 'index.html')
 
-	# CV2
-	nparr = np.frombuffer(request.data, np.uint8)
+
+# to falidate posted image of face with id
+def authenticate(request, user_id, api_token, refid):
+	if api_token != 1000 or refid != 101:
+		return JsonResponse(
+			{
+				'status': 0,
+				'result': -1,
+				'message': 'Invalid Api Token'
+			}
+		)
+
+	# CV2 convert from bin to image array
+	nparr = np.frombuffer(request.body, np.uint8)
 
 	# cv2.IMREAD_COLOR in OpenCV 3.1
 	image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-	print(image.shape)
+	# the result of checking face recognition
+	result = compare(f'{user_id}_{refid}', image)
+	message = 'Identity is True' if result else 'Identity is False'
 
-	cv2.imwrite('image.png', image)
-
-	if api_token == '1000':
-		ret = json.dumps({'status': 1, 'data': True, 'message': 'Success'})
-
-	else:
-		ret = json.dumps({'status': 0, 'data': None, 'message': 'Invalid Api Token'})
-
-	return ret
+	# return status of infor requested
+	return JsonResponse(
+		{
+			'status': 1,
+			'result': result,
+			'message': message,
+		}
+	)
