@@ -7,7 +7,7 @@ function urltoFile(url, filename, mimeType) {
 }
 
 // This will upload the file after having read it
-const upload = (file, targetUrl) => {
+const upload = (file, targetUrl, element) => {
 	fetch(targetUrl, { // Your POST endpoint
 		method: 'POST',
 		headers: {
@@ -16,10 +16,17 @@ const upload = (file, targetUrl) => {
 		},
 		body: file, // This is your file object
 		credentials: "same-origin"
+	
 	}).then(
-		response => response.json() // if the response is a JSON object
+		response => response.json()
+	
 	).then(
-		success => console.log(success) // Handle the success response object
+		function (response) {
+			setTimeout(function (){
+				element.innerHTML = (response.result) ? 'Logged In!' : 'Login Failed!';
+			}, 1000)
+		} // Handle the success response object
+		
 	).catch(
 		error => console.log(error) // Handle the error response object
 	);

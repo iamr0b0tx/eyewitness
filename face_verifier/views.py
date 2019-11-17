@@ -40,8 +40,14 @@ def authenticate(request, user_id, api_token, refid):
 	# cv2.IMREAD_COLOR in OpenCV 3.1
 	image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
+	ref = f'{user_id}_{refid}'
+	datapath = f'face_verifier/lib/data/{ref}/image.jpg'
+
+	# cv2.imwrite(datapath, image)
+	print('image ref', ref, datapath)
+
 	# the result of checking face recognition
-	result = compare(f'{user_id}_{refid}', image)
+	result = compare(ref, datapath)
 	message = 'Identity is True' if result else 'Identity is False'
 
 	# return status of infor requested

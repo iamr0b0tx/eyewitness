@@ -8,7 +8,7 @@ const h1 = screenshot.querySelector('h1');
 const canvas = document.createElement('canvas');
 
 const hdConstraints = {
-  video: {width: {min: 1280}, height: {min: 720}}
+	video: { width: { min: 640 }, height: { min: 480}}
 };
 
 navigator.mediaDevices.getUserMedia(hdConstraints).
@@ -25,7 +25,7 @@ video.onclick = function() {
 	canvas.getContext('2d').drawImage(video, 0, 0);
 
 	// Other browsers will fall back to image/png
-	dataURL = canvas.toDataURL('image/png');
+	dataURL = canvas.toDataURL('image/jpg');
 
 	// notify login process
 	h1.innerHTML = "Logining in...";
@@ -34,10 +34,10 @@ video.onclick = function() {
 	target_url = location.href + '/validate'
 
 	//Usage example:
-	urltoFile(dataURL, 'sample_shot.png', 'image/png')
+	urltoFile(dataURL, 'sample_shot.jpg', 'image/jpg')
 		.then(function (file) {
 			//upload image
-			upload(file, target_url);
+			upload(file, target_url, h1)
 		}
 	);
 		

@@ -26,6 +26,12 @@ ANCHOR_DIR = f'{APP_NAME}/lib/anchors/'
 WEIGHTS_PATH = f'{APP_NAME}/lib/weights/weights.h5'
 ALIGN_MODEL_PATH = f'{APP_NAME}/lib/models/dlib.face.landmarks.dat'
 
+# # constants
+# DATA_DIR = 'data/'
+# ANCHOR_DIR = 'anchors/'
+# WEIGHTS_PATH = 'weights/weights.h5'
+# ALIGN_MODEL_PATH = 'models/dlib.face.landmarks.dat'
+
 # OpenCV loads images with color channels
 # in BGR order. So we need to reverse them
 def load_image(path):
