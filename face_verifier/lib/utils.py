@@ -2,15 +2,42 @@
 # Code taken from https://github.com/iwantooxxoox/Keras-OpenFace (with minor modifications)
 # -----------------------------------------------------------------------------------------
 
+# from the standard library
+import os
+
+# from thirdparty libraies
+import cv2
 import tensorflow as tf
 import numpy as np
-import os
 
 from numpy import genfromtxt
 from keras.layers import Conv2D, ZeroPadding2D, Activation
 from keras.layers.normalization import BatchNormalization
 
+# from the codebase library
+from align import AlignDlib
+
 _FLOATX = 'float32'
+
+# constants
+APP_NAME = 'face_verifier'
+DATA_DIR = f'{APP_NAME}/lib/data/'
+ANCHOR_DIR = f'{APP_NAME}/lib/anchors/'
+WEIGHTS_PATH = f'{APP_NAME}/lib/weights/weights.h5'
+ALIGN_MODEL_PATH = f'{APP_NAME}/lib/models/dlib.face.landmarks.dat'
+
+# OpenCV loads images with color channels
+# in BGR order. So we need to reverse them
+def load_image(path):
+    img = cv2.imread(path, 1)
+    return align_image(img[..., ::-1])
+
+# Initialize the OpenFace face alignment utility
+alignment = AlignDlib(ALIGN_MODEL_PATH)
+
+# aligns image based on eyes and nose
+def align_image(img):
+    return alignment.align(96, img, alignment.getLargestFaceBoundingBox(img), landmarkIndices=AlignDlib.OUTER_EYES_AND_NOSE)
 
 def variable(value, dtype=_FLOATX, name=None):
 	v = tf.Variable(np.asarray(value, dtype=dtype), name=name)

@@ -1,5 +1,0 @@
-Django==2.2.7
-numpy==1.17.4
-opencv-contrib-python==4.1.1.26
-pytz==2019.3
-sqlparse==0.3.0
